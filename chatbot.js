@@ -2,16 +2,19 @@
 // BOT MEGA TV – LOOPITA ASSISTENTE VIRTUAL
 // ===============================
 
-const { Client } = require('whatsapp-web.js');
+import { Client } from 'whatsapp-web.js';
+import qrcode from 'qrcode-terminal';
+
 const client = new Client();
 
 client.on('qr', (qr) => {
     console.log('📱 ESCANEIE O QR CODE:');
-    console.log('🔗 Ou acesse este link: https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(qr));
+    qrcode.generate(qr, { small: false });
+    console.log('\n🔗 Ou acesse este link: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(qr));
     console.log('\n⚠️  Instruções:');
     console.log('1. Abra o WhatsApp no celular');
     console.log('2. Toque em ⋮ > Dispositivos conectados > Conectar um dispositivo');
-    console.log('3. Escaneie o QR Code ou use o link acima\n');
+    console.log('3. Escaneie o QR Code acima\n');
 });
 
 client.on('ready', () => {
@@ -19,6 +22,19 @@ client.on('ready', () => {
     console.log('🤖 Bot Mega TV está online!');
 });
 
+client.on('authenticated', () => {
+    console.log('🔑 Autenticado com sucesso!');
+});
+
+client.on('auth_failure', (msg) => {
+    console.log('❌ Falha na autenticação:', msg);
+});
+
+client.on('disconnected', (reason) => {
+    console.log('🔌 Cliente desconectado:', reason);
+});
+
+// Inicializar o cliente
 client.initialize();
 
 // ================= QR CODE =================
@@ -225,5 +241,6 @@ if (texto.match(/^(4|checklist|diagnóstico|diagnostico|testar|verificar|problem
 // ================= INICIALIZAÇÃO =================
 
 client.initialize();
+
 
 
