@@ -4,7 +4,7 @@
 
 const qrcode = require('qrcode');
 
-client.on('qr', async qr => {
+client.on('qr', async qr == {
     console.log("⚠️ QR GERADO! COPIE O LINK ABAIXO:");
     
     // Gera imagem do QR em base64
@@ -218,3 +218,4 @@ if (texto.match(/^(4|checklist|diagnóstico|diagnostico|testar|verificar|problem
 // ================= INICIALIZAÇÃO =================
 
 client.initialize();
+
