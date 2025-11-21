@@ -4,7 +4,21 @@
 
 import { Client } from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
+import express from 'express';
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Servidor web simples
+app.get('/', (req, res) => {
+    res.send('🤖 Bot Mega TV está rodando!');
+});
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 Servidor rodando na porta ${port}`);
+});
+
+// Cliente WhatsApp
 const client = new Client();
 
 client.on('qr', (qr) => {
@@ -22,30 +36,7 @@ client.on('ready', () => {
     console.log('🤖 Bot Mega TV está online!');
 });
 
-client.on('authenticated', () => {
-    console.log('🔑 Autenticado com sucesso!');
-});
-
-client.on('auth_failure', (msg) => {
-    console.log('❌ Falha na autenticação:', msg);
-});
-
-client.on('disconnected', (reason) => {
-    console.log('🔌 Cliente desconectado:', reason);
-});
-
-// Inicializar o cliente
 client.initialize();
-
-// ================= QR CODE =================
-client.on('qr', qr => {
-    qrcode.generate(qr, { small: true });
-    console.log('⚡ Escaneie o QR Code!');
-});
-
-client.on('ready', () => {
-    console.log('✅ Loopita Mega TV online!');
-});
 
 // ================= HORÁRIO DE ATENDIMENTO =================
 function foraDoHorario() {
@@ -241,6 +232,7 @@ if (texto.match(/^(4|checklist|diagnóstico|diagnostico|testar|verificar|problem
 // ================= INICIALIZAÇÃO =================
 
 client.initialize();
+
 
 
 
