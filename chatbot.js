@@ -2,9 +2,17 @@
 // BOT MEGA TV – LOOPITA ASSISTENTE VIRTUAL
 // ===============================
 
-const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
-const client = new Client();
+const qrcode = require('qrcode');
+
+client.on('qr', async qr => {
+    console.log("⚠️ QR GERADO! COPIE O LINK ABAIXO:");
+    
+    // Gera imagem do QR em base64
+    const qrImage = await qrcode.toDataURL(qr);
+
+    console.log(qrImage);  
+    console.log("Cole esse link no navegador para ver o QR.");
+});
 
 // ================= QR CODE =================
 client.on('qr', qr => {
@@ -208,4 +216,5 @@ if (texto.match(/^(4|checklist|diagnóstico|diagnostico|testar|verificar|problem
 });
 
 // ================= INICIALIZAÇÃO =================
+
 client.initialize();
