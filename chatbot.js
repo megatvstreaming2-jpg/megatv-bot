@@ -11,33 +11,64 @@ const port = process.env.PORT || 3000;
 
 // Servidor web simples
 app.get('/', (req, res) => {
-    res.send('🤖 Bot Mega TV está rodando!');
+    res.send('🤖 Bot Mega TV - Aguardando conexão WhatsApp...');
 });
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta ${port}`);
 });
 
-// Cliente WhatsApp
-const client = new Client();
+// Configuração especial para Render
+console.log('🔄 Iniciando WhatsApp Web.js com configuração Render...');
+
+const client = new Client({
+    puppeteer: {
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu'
+        ],
+        ignoreDefaultArgs: ['--disable-extensions']
+    }
+});
 
 client.on('qr', (qr) => {
+    console.log('🎉 📱 QR CODE GERADO COM SUCESSO!');
     console.log('📱 ESCANEIE O QR CODE:');
     qrcode.generate(qr, { small: false });
-    console.log('\n🔗 Ou acesse este link: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(qr));
-    console.log('\n⚠️  Instruções:');
-    console.log('1. Abra o WhatsApp no celular');
-    console.log('2. Toque em ⋮ > Dispositivos conectados > Conectar um dispositivo');
-    console.log('3. Escaneie o QR Code acima\n');
+    console.log('\n🔗 Link para escanear: https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=' + encodeURIComponent(qr));
+    console.log('\n⚠️  WhatsApp > ⋮ > Dispositivos conectados > Conectar dispositivo');
 });
 
 client.on('ready', () => {
-    console.log('✅ Conectado ao WhatsApp!');
-    console.log('🤖 Bot Mega TV está online!');
+    console.log('🎉 ✅ CONECTADO AO WHATSAPP!');
+    console.log('🤖 Bot Mega TV está ONLINE!');
 });
 
-client.initialize();
+client.on('authenticated', () => {
+    console.log('🔑 Autenticado com sucesso!');
+});
 
+client.on('auth_failure', (msg) => {
+    console.log('❌ Falha na autenticação:', msg);
+});
+
+client.on('disconnected', (reason) => {
+    console.log('🔌 Desconectado:', reason);
+    console.log('🔄 Reinicie o serviço para gerar novo QR Code');
+});
+
+// Inicializar com tratamento de erro
+console.log('🔄 Inicializando WhatsApp...');
+client.initialize().catch(error => {
+    console.log('❌ Erro na inicialização:', error.message);
+});
 // ================= HORÁRIO DE ATENDIMENTO =================
 function foraDoHorario() {
     const agora = new Date();
@@ -232,6 +263,7 @@ if (texto.match(/^(4|checklist|diagnóstico|diagnostico|testar|verificar|problem
 // ================= INICIALIZAÇÃO =================
 
 client.initialize();
+
 
 
 
